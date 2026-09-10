@@ -1,116 +1,112 @@
-const User = require("../models/User.model");
+const express = require("express")
+const router = express.Router()
 
-const router = require("express").Router();
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
+const User = require("../models/User.model")
 const isAuthenticated = require("../middlewares/isAuthenticated")
 
-// POST "/api/auth/signup" => Para registrar al usuario
-router.post("/signup", async (req, res, next) => {
-
-  console.log(req.body)
-
-  const { username, email, password } = req.body
-
-  // Validaciones de Server
-  if (!username || !email || !password) {
-    res.status(400).json({ errorMessage: "Todos los campos deben estar llenos" })
-    return; // detener el resto de la ejecución de la ruta
+// POST "/api/auth/signup" => receive user credentials and create the document in the DB
+router.post("/signup", async(req, res, next) => {
+  // console.log(req.body)
+  const {email, password, username} = req.body
+  
+  // server validators
+  // email and password are required
+  if (!email || !password) {
+    res.status(400).json({errorMessage: "both email and password are mandatory"})
+    return 
   }
 
-  // podriamos hacer validaciones de contraseña, de correo electronico, de cualquier cosa que queramos.
-  // Esperamos que las tengan en sus proyectos ;)
+  // password strength
+  let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm
+  if (passwordRegex.test(password) === false) {
+    res.status(400).json({errorMessage: "password not strong enough. needs at least 8 characters, one uppercase, one lowercase and one number", field: "password"})
+    return 
+  }
+
+  // email has a valid structure. SKIP.
+
+  // (optional)
+  // also username is required
+  // username could also be unique
+  // the email exist, tested by sending an email with an email send provider
+  // max length for string properties
 
   try {
-    
-    // Si el usuario ya está registrado
+
+    // email should be unique
     const foundUser = await User.findOne( { email: email } )
     if (foundUser) {
-      res.status(400).json({ errorMessage: "Usuario ya registrado" })
-      return; 
+      res.status(400).json({errorMessage: "User already exists with this email"})
+      return 
     }
 
-    // encriptar la contraseña
-    const salt = await bcrypt.genSalt(10)
-    const hashPassword = await bcrypt.hash(password, salt)
-    console.log(hashPassword)
+    const hashedPassword = await bcrypt.hash(password, 8)
 
     await User.create({
-      username: username,
       email: email,
-      password: hashPassword
+      password: hashedPassword,
+      username: username
     })
-
-    res.json("Usuario creado")
-
+    
+    res.sendStatus(201)
+    
   } catch (error) {
     next(error)
   }
+
 })
 
-// POST "/api/auth/login" => Validar las credenciales del usuario
+// POST "/api/auth/login" => validate user credentials and create the JWT
 router.post("/login", async (req, res, next) => {
+  const { email, password } = req.body;
 
-  console.log(req.body)
-  const { email, password } = req.body
-
-  // validaciones del login como que los campos esten llenos
-  // ! hacerlas en los proyectos :)
-
+  if (!email) {
+    res.status(400).json({ errorMessage: "Email is mandatory" });
+    return;
+  }
+  if (!password) {
+  res.status(400).json({ errorMessage: "Password is mandatory" });
+    return;
+  }
+ 
   try {
-    
-    // Que el usuario exista
-    const foundUser = await User.findOne( { email: email } )
-    if ( !foundUser ) {
-      res.status(400).json({ errorMessage: "Usuario no registrado con ese correo" })
-      return; 
+    const foundUser = await User.findOne({ email });
+    if (!foundUser) {
+      res.status(400).json({ errorMessage: "User not found" });
+      return;
     }
 
-    // Que la contraseña sea valida
-    const isPasswordCorrect = await bcrypt.compare(password, foundUser.password)
-    if (!isPasswordCorrect) {
-      res.status(400).json({ errorMessage: "Contraseña no valida" })
-      return; 
+    const passwordCorrect = await bcrypt.compare(password, foundUser.password);
+    if (!passwordCorrect) {
+      res.status(400).json({ errorMessage: "Invalid password" });
+      return;
     }
 
-    // ... Si estuviesemos en M2, aqui es donde configuramos sesions y creamos una sesion activa del usuario.
-
-    // crear un token y se lo enviamos al cliente
+    // generate the Token JWT
     const payload = {
       _id: foundUser._id,
       email: foundUser.email,
-      // ! info de roles
+      username: foundUser.username
+    /*   role: foundUser.role */
     }
 
-    const authToken = jwt.sign(
-      payload,
-      process.env.TOKEN_SECRET,
-      { algorithm: "HS256", expiresIn: "7d" }
-    )
+    const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+      expiresIn: "7d"
+    })
 
-    res.json({ authToken: authToken }) // !
+    res.status(200).json( { authToken, payload } )
+
   } catch (error) {
-    next(error)
+    next(error);
   }
+});
 
-
+// GET "/api/auth/verify" => received the token, and validates it and will send to the FE who the owner of the token it.
+router.get("/verify", isAuthenticated, (req, res) => {
+  res.status(200).json({ payload: req.payload })
 })
 
-
-// GET "/api/auth/verify" => Indicarle al frontend si el usuario está logeado (validar)
-router.get("/verify", isAuthenticated, (req, res, next) => {
-
-  // 1. Recibir y validar el token (middleware)
-  // 2. Extraer el payload para indicar al FE quien es el usuario de ese Token
-
-  // cuando usemos el middleware isAuthenticated tendremos acceso a saber QUIEN es el usuario haciendo la llamada (req.session.user)
-
-  console.log( req.payload ) // el usuario activo
-
-  res.json({ payload: req.payload })
-
-})
-
-
-module.exports = router;
+module.exports = router

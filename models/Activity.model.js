@@ -1,9 +1,9 @@
 const { Schema, model } = require("mongoose");
 
-const userSchema = new Schema(
+const activitySchema = new Schema(
   {
     user: {
-     type: Schema.Types.ObjectId, ref: User,
+     type: Schema.Types.ObjectId, ref: "User",
       required: true
     },
     title: {
@@ -29,6 +29,6 @@ const userSchema = new Schema(
 
 );
 
-const User = model("User", userSchema);
+const Activity = model("Activity", activitySchema);
 
-module.exports = User;
+module.exports = Activity;

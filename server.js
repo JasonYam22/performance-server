@@ -9,7 +9,7 @@ const app = express();
 /* const helmet = require("helmet") */
 const applyConfigs = require("./config/index.js")
 applyConfigs(app)
-const rateLimit = require("express-rate-limit")
+/* const rateLimit = require("express-rate-limit") */
 /* const limiter = rateLimit({
   windowMs: 30 * 60 * 1000, // 30 minutes
   max: 30
@@ -25,7 +25,7 @@ const indexRouter = require("./routes/index.routes.js")
 app.use("/api", indexRouter)
 
 // Import the custom error handling middleware:
-const { errorHandler, notFoundHandler } = require('./middlewares/error.handling');
+const { errorHandler, notFoundHandler } = require('./error-handling/index.js');
 
 // Set up custom error handling middleware:
 app.use(notFoundHandler);

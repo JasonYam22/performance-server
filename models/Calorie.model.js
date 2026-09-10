@@ -1,9 +1,9 @@
 const { Schema, model } = require("mongoose");
 
-const userSchema = new Schema({
+const calorieSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: User,
+    ref: "User",
     required: true,
   },
   mealName: {
@@ -20,7 +20,7 @@ const userSchema = new Schema({
   },
   caloriesBurned: {
     type: Number,
-    required: true,
+/*     required: true, */
   },
   carbs: {
  type: Number,
@@ -34,11 +34,11 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-time: {
+/* time: {
     timestamps: true
-}
+} */
 });
 
-const User = model("User", userSchema);
+const Calorie = model("Calorie", calorieSchema);
 
-module.exports = User;
+module.exports = Calorie;

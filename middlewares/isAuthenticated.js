@@ -7,7 +7,7 @@ const isAuthenticated = jwt({
   getToken: (req) => {
     console.log(req.headers)
     if (!req.headers || !req.headers.authorization ) {
-      console.log("no hay token")
+      console.log("There is not token")
       return null
     }
 
@@ -16,12 +16,12 @@ const isAuthenticated = jwt({
     const token = tokenArr[1]
 
     if (tokenType !== "Bearer") {
-      console.log("token de tipo incorrecto")
+      console.log("Token typed incorrectly")
       return null
     }
 
     // espera que recibamos y retornemos el token
-    console.log("Token entregado")
+    console.log("Token delivered")
     return token
 
   }
