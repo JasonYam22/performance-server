@@ -7,7 +7,7 @@ const Activity = require("../models/Activity.model")
 router.get("/", (req, res, next) => {
     Activity.find({user: req.payload._id})
     .then((activities) => {
-        if (!activies) {
+        if (!activities) {
         return res.status(404).json({message: "Activity not found or unauthorized"})
         }
         res.status(200).json(activities)
@@ -37,7 +37,7 @@ router.post("/", (req, res, next) => {
         date,
     })
     .then((activities) => {
-            if (!activies) {
+            if (!activities) {
         return res.status(404).json({message: "Activity not found or unauthorized"})
         }
         res.status(201).json(activities)
@@ -48,8 +48,8 @@ router.post("/", (req, res, next) => {
 })
 
 // get single activity
-router.get("/:activiyId", (req, res, next) => {
-    Activity.findOne({_id: req.params.activiyId, user: req.payload._id})
+router.get("/:activityId", (req, res, next) => {
+    Activity.findOne({_id: req.params.activityId, user: req.payload._id})
     .then((activity) => {
         if (!activity) {
         return res.status(404).json({message: "Activity not found or unauthorized"})
