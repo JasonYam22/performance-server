@@ -17,11 +17,7 @@ const calorieSchema = new Schema({
   protein: {
     type: Number,
     required: true,
-  },
-  caloriesBurned: {
-    type: Number,
-/*     required: true, */
-  },
+  }, 
   carbs: {
  type: Number,
     required: true,

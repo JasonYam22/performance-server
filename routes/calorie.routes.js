@@ -25,7 +25,6 @@ router.post("/", (req, res, next) => {
        protein,
        carbs,
        fat,
-       caloriesBurned,
        date
      /*    time */
     } = req.body
@@ -37,7 +36,6 @@ router.post("/", (req, res, next) => {
        protein,
        carbs,
        fat,
-       caloriesBurned,
        date
     })
     .then((calories) => {
