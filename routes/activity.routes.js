@@ -36,11 +36,11 @@ router.post("/", (req, res, next) => {
         caloriesBurned,
         date,
     })
-    .then((activities) => {
-            if (!activities) {
+    .then((activity) => {
+            if (!activity) {
         return res.status(404).json({message: "Activity not found or unauthorized"})
         }
-        res.status(201).json(activities)
+        res.status(201).json(activity)
     })
     .catch((error) => {
         next(error)
@@ -62,8 +62,8 @@ router.get("/:activityId", (req, res, next) => {
 })
 
 // edit activity
-router.put("/:activiyId", (req, res, next) => {
-    Activity.findOneAndUpdate({_id: req.params.activiyId, user: req.payload._id}, req.body, 
+router.put("/:activityId", (req, res, next) => {
+    Activity.findOneAndUpdate({_id: req.params.activityId, user: req.payload._id}, req.body, 
     {returnDocument:"after"})
     .then((updatedActivity) => {
          if (!updatedActivity) {
@@ -77,8 +77,8 @@ router.put("/:activiyId", (req, res, next) => {
 })
 
 //delete activiy
-router.delete("/:activiyId", (req, res, next) => {
-    Activity.findOneAndDelete({_id: req.params.activiyId,user: req.payload._id})
+router.delete("/:activityId", (req, res, next) => {
+    Activity.findOneAndDelete({_id: req.params.activityId,user: req.payload._id})
     .then((activity) => {
          if (!activity) {
         return res.status(404).json({message: "Activity not found or unauthorized"})

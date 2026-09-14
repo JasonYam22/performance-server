@@ -21,7 +21,7 @@ router.get("/", (req, res, next) => {
 router.post("/", (req, res, next) => {
     const { 
        mealName,
-       calories,
+       caloriesConsumed,
        protein,
        carbs,
        fat,
@@ -32,17 +32,17 @@ router.post("/", (req, res, next) => {
     Calorie.create({
         user: req.payload._id,
         mealName,
-       calories,
+       caloriesConsumed,
        protein,
        carbs,
        fat,
        date
     })
-    .then((calories) => {
-           if (!calories) {
+    .then((newMeal) => {
+           if (!newMeal) {
         return res.status(404).json({message: "Meal not found or unauthorized"})
         }
-        res.status(201).json(calories)
+        res.status(201).json(newMeal)
     })
     .catch((error) => {
         next(error)

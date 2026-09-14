@@ -4,7 +4,9 @@ const router = express.Router()
 const User = require("../models/User.model")
 
 router.put("/", (req, res, next) => {
-    User.findByIdAndUpdate(req.payload._id, req.body, {returnDocument: "after"})
+const { username, weight, height, goalWeight, gender} = req.body
+
+    User.findByIdAndUpdate(req.payload._id,{ username, weight, height, goalWeight, gender}, {returnDocument: "after"})
     .select("email username")
     .then((updatedUser) => {
            if (!updatedUser) {

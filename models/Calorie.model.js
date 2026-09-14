@@ -10,8 +10,8 @@ const calorieSchema = new Schema({
     type: String,
     required: true,
   },
-  calories: {
-    type: String,
+  caloriesConsumed: {
+    type: Number,
     required: true,
   },
   protein: {
