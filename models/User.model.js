@@ -31,6 +31,14 @@ const userSchema = new Schema(
       enum: ["male", "female", "other"],
       lowercase: true,
       trim: true
+    },
+    dailyCalorieGoal: {
+      type: Number,
+      default: 2000
+    },
+    weeklyWorkoutGoal: {
+      type: Number,
+      default: 0
     }
   },
   {

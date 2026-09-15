@@ -4,9 +4,9 @@ const router = express.Router()
 const User = require("../models/User.model")
 
 router.put("/", (req, res, next) => {
-const { username, weight, height, goalWeight, gender} = req.body
+const { username, weight, height, goalWeight, gender, dailyCalorieGoal, weeklyWorkoutGoal} = req.body
 
-    User.findByIdAndUpdate(req.payload._id,{ username, weight, height, goalWeight, gender}, {returnDocument: "after"})
+    User.findByIdAndUpdate(req.payload._id,{ username, weight, height, goalWeight, gender, dailyCalorieGoal, weeklyWorkoutGoal}, {returnDocument: "after"})
     .select("email username")
     .then((updatedUser) => {
            if (!updatedUser) {
@@ -21,7 +21,7 @@ const { username, weight, height, goalWeight, gender} = req.body
 
 router.get("/", (req, res, next) => {
     User.findById(req.payload._id)
-    .select ("email username")
+    .select ("email username height weight goalWeight gender dailyCalorieGoal weeklyWorkoutGoal")
     .then((user) => {
      if (!user) {
         return res.status(404).json({message: "User not found"})
@@ -34,7 +34,6 @@ router.get("/", (req, res, next) => {
 })
 
 router.delete("/", (req, res, next) => {
-    console.log("CURRENT USER ID:", req.payload._id)
     User.findByIdAndDelete(req.payload._id)
     .then((user) => {
            if (!user) {
