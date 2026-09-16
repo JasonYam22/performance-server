@@ -7,7 +7,7 @@ router.put("/", (req, res, next) => {
 const { username, weight, height, goalWeight, gender, dailyCalorieGoal, weeklyWorkoutGoal} = req.body
 
     User.findByIdAndUpdate(req.payload._id,{ username, weight, height, goalWeight, gender, dailyCalorieGoal, weeklyWorkoutGoal}, {returnDocument: "after"})
-    .select("email username")
+    .select("email username height weight goalWeight gender dailyCalorieGoal weeklyWorkoutGoal")
     .then((updatedUser) => {
            if (!updatedUser) {
         return res.status(404).json({message: "User not found"})
