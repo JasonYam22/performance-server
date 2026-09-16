@@ -34,11 +34,11 @@ const userSchema = new Schema(
     },
     dailyCalorieGoal: {
       type: Number,
-      default: 2000
+      default: null
     },
     weeklyWorkoutGoal: {
       type: Number,
-      default: 0
+      default: null
     }
   },
   {
