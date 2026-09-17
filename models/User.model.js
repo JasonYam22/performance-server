@@ -19,12 +19,15 @@ const userSchema = new Schema(
     },
     weight: {
       type: Number,
+       min: [0, "Weight can't be negative."],
     },
     height: {
       type: Number,
+       min: [0, "Height can't be negative."],
     },
     goalWeight: {
       type: Number,
+       min: [0, "Goal weight can't be negative."],
     },
     gender: {
       type: String,
@@ -34,11 +37,13 @@ const userSchema = new Schema(
     },
     dailyCalorieGoal: {
       type: Number,
-      default: null
+      default: null,
+       min: [0, "Daily calorie goal can't be negative."],
     },
     weeklyWorkoutGoal: {
       type: Number,
-      default: null
+      default: null,
+       min: [0, "Weekly workout goal can't be negative."],
     }
   },
   {
