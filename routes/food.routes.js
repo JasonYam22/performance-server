@@ -12,6 +12,7 @@ router.get("/", async (req, res, next) => {
           api_key: process.env.CALORIE_API_KEY,
           query,
           pageSize: 1,
+   dataType: "Foundation,SR Legacy",
         },
       }
     );
