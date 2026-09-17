@@ -32,7 +32,7 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 // server listen & PORT
-const PORT = process.env.PORT || 5006
+const PORT = process.env.PORT || 5005
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
