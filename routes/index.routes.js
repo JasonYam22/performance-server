@@ -10,5 +10,6 @@ router.use("/activities", isAuthenticated,require("./activity.routes"))
 router.use("/calories", isAuthenticated, require("./calorie.routes"))
 router.use("/users", isAuthenticated, require("./user.routes"))
 router.use("/paths", isAuthenticated, require("./path.routes"))
+router.use("/food", isAuthenticated, require("./food.routes"))
 
 module.exports = router;
